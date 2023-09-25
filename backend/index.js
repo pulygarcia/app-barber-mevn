@@ -1,26 +1,12 @@
 import express from 'express';
+import servicesRoutes from './routes/servicesRoutes.js';
 
 //Set up the app
 const app = express();
 
 
 //define route
-app.get('/', (req, res) => {
-    const products = [
-        {
-            id: 1,
-            name: 'Producto 1',
-            price: 1212 
-        },
-        {
-            id: 2,
-            name: 'Producto 2',
-            price: 1212323 
-        }
-    ]
-
-    res.send(products)
-})
+app.use('/api/services', servicesRoutes)
 
 
 //define port
