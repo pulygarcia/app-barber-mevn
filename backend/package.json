@@ -1,6 +1,7 @@
 {
   "name": "mevn-peluqueria-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "app backend",
   "main": "index.js",
   "scripts": {
