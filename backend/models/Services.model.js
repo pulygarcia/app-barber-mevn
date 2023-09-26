@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 
+//Defines how data points are organized
 const servicesSchema = mongoose.Schema({
     name: {
         type: String,
@@ -13,6 +14,7 @@ const servicesSchema = mongoose.Schema({
     }
 })
 
+//Declarate as a model
 const services = mongoose.model('Services', servicesSchema);
 
 export default services;
