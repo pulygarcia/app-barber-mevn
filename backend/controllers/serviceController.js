@@ -79,9 +79,35 @@ const updateService = async (req, res) => {
 }
 
 
+const deleteService = async (req, res) => {
+    //Same validations
+    const {id} = req.params;
+    if(validateId(id, res)){
+        return;
+    }
+
+    const service = await Services.findById(id);
+    if(serviceNotFound(service, res)){
+        return;
+    }
+
+    //If it's ok...
+    try {
+        await service.deleteOne();
+
+        res.json({
+            msg: 'El servicio fué eliminado'
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 export {
     createService,
     getAllServices,
     getServiceById,
-    updateService
+    updateService,
+    deleteService
 }
