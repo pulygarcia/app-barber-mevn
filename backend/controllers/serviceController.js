@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import {services} from '../data/beautyServices.js'
 import Services from '../models/Services.model.js'
 
@@ -24,11 +25,38 @@ const createService = async (req, res) => {
 }
 
 
-const getServices = (req, res) => {
+const getAllServices = (req, res) => {
     res.send(services)
 }
 
+const getServiceById = async (req, res) => {
+    //Check type ObjectId
+    const {id} = req.params;
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        const error = new Error('ID no válido');
+
+        return res.status(400).json({
+            msg : error.message
+        })
+    }
+
+    //Check if exist
+    const service = await Services.findById(id);
+    if(!service){
+        const error = new Error('Servicio no encontrado');
+
+        return res.status(404).json({
+            msg : error.message
+        })
+    }
+
+    //If exist, show it
+    res.json(service);
+}
+
+
 export {
     createService,
-    getServices
+    getAllServices,
+    getServiceById
 }
