@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import {services} from '../data/beautyServices.js'
 import Services from '../models/Services.model.js'
+import { validateId, serviceNotFound } from '../helpers/index.js';
 
 const createService = async (req, res) => {
     if(Object.values(req.body).includes('')){
@@ -30,24 +31,17 @@ const getAllServices = (req, res) => {
 }
 
 const getServiceById = async (req, res) => {
-    //Check type ObjectId
     const {id} = req.params;
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        const error = new Error('ID no válido');
-
-        return res.status(400).json({
-            msg : error.message
-        })
+    
+    //Check type ObjectId
+    if(validateId(id, res)){
+        return;
     }
 
     //Check if exist
     const service = await Services.findById(id);
-    if(!service){
-        const error = new Error('Servicio no encontrado');
-
-        return res.status(404).json({
-            msg : error.message
-        })
+    if(serviceNotFound(service, res)){
+        return;
     }
 
     //If exist, show it
@@ -55,8 +49,39 @@ const getServiceById = async (req, res) => {
 }
 
 
+const updateService = async (req, res) => {
+    //Validation again
+    const {id} = req.params;
+
+    if(validateId(id, res)){
+        return;
+    }
+
+    //Check if exist
+    const service = await Services.findById(id);
+    if(serviceNotFound(service, res)){
+        return;
+    }
+
+    //Type in the service object the new values, or if there arent changes, keep the values.
+    service.name = req.body.name || service.name;
+    service.price = req.body.price || service.price;
+
+    try {
+        await service.save();
+
+        res.json({
+            msg: 'El servicio fué actualizado'
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
 export {
     createService,
     getAllServices,
-    getServiceById
+    getServiceById,
+    updateService
 }
