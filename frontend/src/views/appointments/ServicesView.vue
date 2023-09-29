@@ -3,5 +3,5 @@
 </script>
 
 <template>
-  <h2>Desde servicios</h2>
+  <h2 class="text-white">Desde servicios</h2>
 </template>
