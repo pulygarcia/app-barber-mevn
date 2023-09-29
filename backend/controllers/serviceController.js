@@ -1,5 +1,3 @@
-import mongoose from 'mongoose';
-import {services} from '../data/beautyServices.js'
 import Services from '../models/Services.model.js'
 import { validateId, serviceNotFound } from '../helpers/index.js';
 
@@ -26,8 +24,14 @@ const createService = async (req, res) => {
 }
 
 
-const getAllServices = (req, res) => {
-    res.send(services)
+const getAllServices = async (req, res) => {
+    try {
+        const services = await Services.find();
+        res.json(services);
+        
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const getServiceById = async (req, res) => {
