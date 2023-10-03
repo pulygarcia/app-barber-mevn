@@ -4,16 +4,18 @@ import servicesApi from '../api/servicesApi';
 
 export const useServicesStore = defineStore('services', () => {
 
+    const services = ref([]);
+
     onMounted( async() => {
         try {
-            const {data} = await servicesApi.all();
-            console.log(data);
+            const {data} = await servicesApi.all(); //axios return values as data
+            services.value = data;
         } catch (error) {
             console.log(error);
         }
     })
 
     return{
-
+        services
     }
 })
