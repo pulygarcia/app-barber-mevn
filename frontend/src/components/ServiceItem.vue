@@ -1,5 +1,6 @@
 <script setup>
   import { useAppointmentStore } from '../stores/appointmentsStore';
+  import { formatCurrency } from '../helpers';
 
   const appointmentsStore = useAppointmentStore();
 
@@ -17,6 +18,6 @@
     @click="appointmentsStore.onServiceSelected(service)"
   >
     <p class="font-bold text-xl text-white">{{ service.name }}</p>
-    <p class="font-extrabold text-xl text-blue-500 mt-4">${{ service.price }}</p>
+    <p class="font-extrabold text-xl text-blue-500 mt-4">{{ formatCurrency(service.price) }}</p>
   </div>
 </template>
