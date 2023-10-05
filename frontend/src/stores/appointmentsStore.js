@@ -4,6 +4,7 @@ import {defineStore} from 'pinia';
 export const useAppointmentStore = defineStore('appointments', () => {
 
     const services = ref([]);
+    const dateValue = ref('');
 
     function onServiceSelected(service){
         //Avoid duplicates
@@ -30,6 +31,7 @@ export const useAppointmentStore = defineStore('appointments', () => {
 
     return{
         services,
+        dateValue,
         onServiceSelected,
         isServiceSelected,
         totalToPay

@@ -1,9 +1,17 @@
 <script setup>
   import {useAppointmentStore} from '../../stores/appointmentsStore';
   import SelectedService from '../../components/SelectedService.vue'
-import { formatCurrency } from '../../helpers';
+  import { formatCurrency } from '../../helpers';
+  import VueTailwindDatepicker from "vue-tailwind-datepicker";
+import { ref } from 'vue';
 
   const appointmentsStore = useAppointmentStore();
+
+  const formatter = ref({
+    date: 'DD MM YYYY',
+    month: 'MMM',
+  })
+
 </script>
 
 <template>
@@ -20,6 +28,25 @@ import { formatCurrency } from '../../helpers';
     />
 
     <h3 class="text-white text-2xl font-extrabold mt-5 text-right">Total a pagar: <span class="text-blue-500">{{ formatCurrency(appointmentsStore.totalToPay) }}</span></h3>
+
+    <div class="lg:flex gap-5 lg:items-center mt-8">
+      <div class="space-y-5 mt-8">
+        <h3 class="text-white text-2xl font-extrabold">Seleccioná una fecha</h3>
+
+        <VueTailwindDatepicker 
+          i18n="es"
+          as-single
+          no-input
+          :formatter="formatter"
+          v-model="appointmentsStore.dateValue"
+        />
+      </div>
+
+      <div class="text-white">
+        Horas
+      </div>
+
+    </div>
 
   </div>
 
