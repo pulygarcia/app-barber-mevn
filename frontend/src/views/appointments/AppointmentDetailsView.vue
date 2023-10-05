@@ -31,7 +31,7 @@ import { ref } from 'vue';
 
     <div class="lg:flex gap-5 lg:items-center mt-8">
       <div class="space-y-5 mt-8">
-        <h3 class="text-white text-2xl font-extrabold">Seleccioná una fecha</h3>
+        <h3 class="text-white text-2xl font-extrabold">Seleccioná fecha y hora</h3>
 
         <VueTailwindDatepicker 
           i18n="es"
@@ -42,8 +42,10 @@ import { ref } from 'vue';
         />
       </div>
 
-      <div class="text-white">
-        Horas
+      <div class="mt-5 md:mt-0 grid grid-cols-4 gap-3">
+        <article v-for="hour in appointmentsStore.hours" class="cursor-pointer p-1 rounded-xl bg-gray-600 w-20 md:w-28 hover:bg-gray-800">
+          <p class="text-center text-white font-bold text-base">{{ hour }}</p>
+        </article>
       </div>
 
     </div>
