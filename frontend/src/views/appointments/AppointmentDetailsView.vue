@@ -12,6 +12,11 @@ import { ref } from 'vue';
     month: 'MMM',
   })
 
+  const disableDate = (date) => {
+    const today = new Date();
+    return date < today || date.getMonth() > today.getMonth() + 1 || [0].includes(date.getDay());
+  }
+
 </script>
 
 <template>
@@ -38,16 +43,25 @@ import { ref } from 'vue';
           as-single
           no-input
           :formatter="formatter"
+          :disable-date="disableDate"
           v-model="appointmentsStore.dateValue"
         />
       </div>
 
       <div class="mt-5 md:mt-0 grid grid-cols-4 gap-3">
-        <article v-for="hour in appointmentsStore.hours" class="cursor-pointer p-1 rounded-xl bg-gray-600 w-20 md:w-28 hover:bg-gray-800">
+        <article 
+          v-for="hour in appointmentsStore.hours" 
+          class="cursor-pointer p-1 rounded-xl bg-gray-600 w-20 md:w-28 hover:bg-gray-800"
+          :class="appointmentsStore.selectedHour === hour ? 'border border-blue-500' : '' "
+          @click="appointmentsStore.onSelectedHour(hour)"
+        >
           <p class="text-center text-white font-bold text-base">{{ hour }}</p>
         </article>
       </div>
+    </div>
 
+    <div v-if="appointmentsStore.isValidConfirmation" class="flex justify-end">
+      <button type="button" class="bg-blue-500 text-white font-bold w-full p-3 rounded-lg">Confirmar turno</button>
     </div>
 
   </div>
