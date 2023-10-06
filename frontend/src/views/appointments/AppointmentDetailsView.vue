@@ -61,7 +61,13 @@ import { ref } from 'vue';
     </div>
 
     <div v-if="appointmentsStore.isValidConfirmation" class="flex justify-end">
-      <button type="button" class="bg-blue-500 text-white font-bold w-full p-3 rounded-lg">Confirmar turno</button>
+      <button 
+        type="button" 
+        class="bg-blue-500 text-white font-bold w-full p-3 rounded-lg"
+        @click="appointmentsStore.createAppointment"
+      >
+        Confirmar turno
+      </button>
     </div>
 
   </div>

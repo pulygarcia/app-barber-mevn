@@ -31,6 +31,17 @@ export const useAppointmentStore = defineStore('appointments', () => {
         }
     }
 
+    function createAppointment(){
+        const appointment = {
+            services: services.value.map(service => service._id),  //Only need service ID, not all the object
+            date: dateValue.value,
+            totalToPay: totalToPay.value,
+            selectedHour: selectedHour.value
+        }
+
+        console.log(appointment);
+    }
+
     const isServiceSelected = computed(() => {
         //Use for add dinamic classes in the component
         return (id) => services.value.some(selectedService => selectedService._id === id)
@@ -55,6 +66,7 @@ export const useAppointmentStore = defineStore('appointments', () => {
         selectedHour,
         onSelectedHour,
         onServiceSelected,
+        createAppointment,
         isServiceSelected,
         totalToPay,
         isValidConfirmation
