@@ -20,7 +20,10 @@ function serviceNotFound(service, res){
     }
 }
 
+const userToken = () => Date.now().toString(32) + Math.random().toString(32).substring(32);
+
 export{
     validateId,
-    serviceNotFound
+    serviceNotFound,
+    userToken
 }
