@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt'
 import { userToken } from '../helpers/index.js';
 
 const userSchema = mongoose.Schema({
@@ -31,6 +32,16 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     }
+})
+
+//.PRE method => it means the code is gonna execute previous to the indicated action, in this case: "save". Its gonna check and hash, and then, save.
+userSchema.pre('save', async function(next){
+    if(!this.isModified('password')){  //If the password is already hashed, dont do nothing and continue.
+        next();
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
 })
 
 
