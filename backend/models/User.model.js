@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { userToken } from '../helpers';
+import { userToken } from '../helpers/index.js';
 
 const userSchema = mongoose.Schema({
     name:{

@@ -4,6 +4,7 @@ import colors from 'colors';
 import { db } from './config/db.js';
 import cors from 'cors';
 import servicesRoutes from './routes/servicesRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 //Habilitar variables de entorno
 dotenv.config();
@@ -18,7 +19,8 @@ app.use(express.json());
 db();
 
 //Config cors
-const whiteList = ['http://localhost:5173'];
+
+const whiteList = process.argv[2] === '--postman' ? [process.env.FRONTEND_URL, undefined] : [process.env.FRONTEND_URL];
 
 const corsOptions = {
     origin : function(origin, callback){
@@ -34,8 +36,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
-//define route
+//define routes
 app.use('/api/services', servicesRoutes)
+app.use('/api/auth', authRoutes)
 
 
 //define port
