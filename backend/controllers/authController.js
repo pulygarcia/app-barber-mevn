@@ -54,6 +54,36 @@ const register = async (req, res) => {
     }
 }
 
+const verifyUser = async (req, res) => {
+    console.log(req.params.token); //get token from url
+
+    const user = await User.findOne({token: req.params.token});
+
+    //If NO valid token
+    if(!user){
+        const error = new Error('Usuario no válido');
+
+        return res.status(401).json({
+            msg : error.message
+        })
+    }
+
+    //valid token, confirm account
+    try {
+        user.verified = true;
+        user.token = ''; //the unique token won't be available again. The token only has one use.
+        await user.save();
+
+        return res.json({
+            msg : "Cuenta verificada correctamente"
+        });
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export{
-    register
+    register,
+    verifyUser
 }
