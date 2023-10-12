@@ -1,3 +1,4 @@
+import { sendVerificationEmail } from '../email/authEmailService.js';
 import User from '../models/User.model.js'
 
 const register = async (req, res) => {
@@ -34,7 +35,9 @@ const register = async (req, res) => {
     try {
         const user = new User(req.body);
 
-        await user.save() //save in DB
+        const result = await user.save() //save in DB
+
+        sendVerificationEmail();
 
         //feedback
         res.json({
