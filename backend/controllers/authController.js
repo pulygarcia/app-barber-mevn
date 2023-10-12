@@ -37,7 +37,12 @@ const register = async (req, res) => {
 
         const result = await user.save() //save in DB
 
-        sendVerificationEmail();
+        const {name, email, token} = result;
+        sendVerificationEmail({
+            name: name,
+            email: email,
+            token: token
+        });
 
         //feedback
         res.json({
