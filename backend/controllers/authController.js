@@ -83,7 +83,44 @@ const verifyUser = async (req, res) => {
     }
 }
 
+const login = async (req, res) => {
+    console.log(req.body);
+
+    //Check if email exists in DB
+    const user = await User.findOne({email: req.body.email});
+    if(!user){
+        const error = new Error('Email incorrecto');
+
+        return res.status(401).json({
+            msg : error.message
+        })
+    }
+
+    //Check if is verified
+    if(!user.verified){
+        const error = new Error('Cuenta no verificada');
+
+        return res.status(401).json({
+            msg : error.message
+        })
+    }
+    
+    //Compare the password with the hashed one
+    if(await user.checkPassword(req.body.password)){
+        res.json({
+            msg: "Usuario autenticado"
+        })
+    }else{
+        const error = new Error('Contraseña incorrecta');
+
+        return res.status(401).json({
+            msg : error.message
+        })
+    }
+}
+
 export{
     register,
-    verifyUser
+    verifyUser,
+    login
 }
