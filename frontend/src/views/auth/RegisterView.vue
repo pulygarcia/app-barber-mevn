@@ -1,5 +1,30 @@
 <script setup>
-  
+  import authApiServices from '../../api/authApiServices'
+  import { inject } from 'vue'
+  import {reset} from '@formkit/vue'
+
+  const toast = inject('toast');
+
+  const handleSubmit = async ({password_confirm, ...formData}) => { //extract password_confirm cause is not necessary for the request
+    try {
+      const {data} = await authApiServices.register(formData);
+
+      toast.open({
+        message: data.msg,
+        type: 'success'
+      })
+
+      reset('registerFormkit'); //Put a name in form id, and use reset function for clear it
+
+    } catch (error) {
+      console.log(error.response.data.msg); //Open axios error and get backend message
+
+      toast.open({
+        message: error.response.data.msg,
+        type: 'error'
+      })
+    }
+  }
 </script>
 
 <template>
@@ -7,9 +32,11 @@
   <p class="text-white text-center">Creá tu cuenta en Infinity Barber</p>
 
   <FormKit
+    id="registerFormkit"
     type="form"
     :actions="false"
     incomplete-message="No completaste el formulario"
+    @submit="handleSubmit"
   >
     <FormKit
       type="text"
@@ -27,7 +54,7 @@
       id="email"
       validation="required|email"
       placeholder="Tu e-mail"
-      label="Pulygarcia09@gmail.com"
+      label="Correo electrónico"
       :validation-messages="{ required: 'Por favor ingresá un correo electrónico', email: 'Ingresá un correo válido'}"
     />
 
