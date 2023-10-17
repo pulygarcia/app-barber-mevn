@@ -13,7 +13,7 @@ export async function sendVerificationEmail({name, email, token}){
         html: `<p>Tu cuenta está casi lista ${name}.</p>
             <p>Por favor confirmá tu cuenta para validar que sos vos</p>
             <p>Si no creaste esta cuenta, ignora este e-mail</p>
-            <a href="http://localhost:4000/api/auth/verify/${token}">Confirmar cuenta</a>
+            <a href="${process.env.FRONTEND_URL}/auth/verificacion/${token}">Confirmar cuenta</a>
         `
     });
 }

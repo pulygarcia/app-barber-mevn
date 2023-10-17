@@ -44,7 +44,7 @@ const router = createRouter({
           component : () => import('../views/auth/RegisterView.vue')
         },
         {
-          path : 'verificacion',
+          path : 'verificacion/:token',
           name : 'user-verification',
           component : () => import('../views/auth/VerificationView.vue')
         },
