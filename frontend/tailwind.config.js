@@ -5,7 +5,8 @@ module.exports = {
   content: [
     "index.html",
     "./src/**/*.{js,vue,jsx,ts.tsx}",
-    "./node_modules/vue-tailwind-datepicker/**/*.js"
+    "./node_modules/vue-tailwind-datepicker/**/*.js",
+    "./formkit.config.js"
   ],
   theme: {
     extend: {
