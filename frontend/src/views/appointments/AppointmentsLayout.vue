@@ -14,7 +14,7 @@ import { RouterLink, RouterView } from 'vue-router';
                 <button class="bg-red-500 font-bold text-white py-1 px-3 rounded-md hover:bg-red-600 transition">Cerrar sesión</button>
             </div>
             <nav class="flex gap-4 items-center justify-end">
-                <button class="font-bold uppercase">Mis citas</button>
+                <RouterLink :to="{name: 'user-appointments'}" class="font-bold text-white">Mis turnos</RouterLink>
 
                 <RouterLink :to="{name: 'new-appointment'}" class="font-bold uppercase bg-blue-600 px-3 py-1 rounded-md hover:bg-blue-700 transition">
                     Nueva cita

@@ -1,17 +1,23 @@
 <script setup>
-  import { RouterLink } from 'vue-router';
+  import { RouterLink, useRouter } from 'vue-router';
   import authApiServices from '../../api/authApiServices'
   import { inject } from 'vue';
 
   const toast = inject('toast');
+  const router = useRouter();
 
   const handleSubmit = async (formData) => {
     try {
       const {data} = await authApiServices.login(formData);
+
+      localStorage.setItem('auth_jwt', JSON.stringify(data.jsonWebToken));
+
       toast.open({
         message: data.msg,
         type: 'success'
       })
+
+      router.push({name: 'user-appointments'})
 
     } catch (error) {
       //console.log(error.response.data.msg);

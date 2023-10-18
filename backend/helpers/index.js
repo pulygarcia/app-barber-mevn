@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import jwt from 'jsonwebtoken';
 
 function validateId(id, res){
     if(!mongoose.Types.ObjectId.isValid(id)){
@@ -22,8 +23,15 @@ function serviceNotFound(service, res){
 
 const userToken = () => Date.now().toString(32) + Math.random().toString(32).substring(32);
 
+const generateJWT = (id) => {
+    return jwt.sign({id}, process.env.PRIVATE_KEY, {
+        expiresIn: '30d' //days
+    })
+}
+
 export{
     validateId,
     serviceNotFound,
-    userToken
+    userToken,
+    generateJWT
 }

@@ -1,5 +1,6 @@
 import { sendVerificationEmail } from '../email/authEmailService.js';
 import User from '../models/User.model.js'
+import { generateJWT } from '../helpers/index.js';
 
 const register = async (req, res) => {
     //Valid the fields
@@ -84,7 +85,7 @@ const verifyUser = async (req, res) => {
 }
 
 const login = async (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
 
     //Check if email exists in DB
     const user = await User.findOne({email: req.body.email});
@@ -107,8 +108,12 @@ const login = async (req, res) => {
     
     //Compare the password with the hashed one
     if(await user.checkPassword(req.body.password)){
+        //Give JWT
+        const jsonWebToken = generateJWT(user._id);
+
+        //return JWT for save in LocalStorage
         res.json({
-            msg: "Usuario autenticado"
+            jsonWebToken
         })
     }else{
         const error = new Error('Contraseña incorrecta');

@@ -16,6 +16,11 @@ const router = createRouter({
       component: AppointmentsLayout,
       children : [
         {
+          path: '',
+          name: 'user-appointments',
+          component: () => import('../views/appointments/UserAppointmentsView.vue')
+        },
+        {
           path : 'nueva',
           component : () => import('../views/appointments/NewAppointmentLayout.vue'),
           children : [
@@ -28,7 +33,7 @@ const router = createRouter({
               path : 'detalles',
               name : 'appointment-details',
               component : () => import('../views/appointments/AppointmentDetailsView.vue')
-            },
+            }
           ]
         }
       ]
