@@ -14,6 +14,7 @@ const router = createRouter({
       path: '/reservaciones',
       name: 'appointments',
       component: AppointmentsLayout,
+      meta: { requiresAuth: true },
       children : [
         {
           path: '',
@@ -61,6 +62,25 @@ const router = createRouter({
       ]
     }
   ]
+})
+
+//Guard navigation (info from vue-router docs)
+
+router.beforeEach(async (to, from, next) => {
+  //check routes that need auth
+  const requiresAuth = to.matched.some(url => url.meta.requiresAuth); //.matched works for find childrens of the father route that need auth
+
+  if(requiresAuth){
+    //Check if user is auth
+    try {
+      
+    } catch (error) {
+      console.log(error);
+    }
+
+  }else{
+    next();
+  }
 })
 
 export default router
