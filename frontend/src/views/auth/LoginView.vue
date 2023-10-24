@@ -10,7 +10,7 @@
     try {
       const {data} = await authApiServices.login(formData);
 
-      localStorage.setItem('auth_jwt', JSON.stringify(data.jsonWebToken));
+      localStorage.setItem('auth_jwt', data.jsonWebToken);  //probar si quitando el json stringify gunciona
 
       toast.open({
         message: data.msg,

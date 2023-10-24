@@ -9,5 +9,13 @@ export default{
     },
     login(data){
         return api.post('/auth/login/', data);
+    },
+    auth(){
+        const token = localStorage.getItem('auth_jwt');
+        return api.get('/auth/user', {
+            headers: {
+                Authorization: `Bearer ${token}`  //Check why is 'Bearer' here, in back middleware.
+            }
+        });
     }
 }
