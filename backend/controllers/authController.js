@@ -127,7 +127,7 @@ const login = async (req, res) => {
 const user = async (req, res) => {
     //console.log(req.user);   //Getting req.user from middleware and returning it
     res.json(
-        user
+        req.user
     )
 }
 
