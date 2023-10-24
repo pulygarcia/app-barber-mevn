@@ -8,7 +8,7 @@ import { ref } from 'vue';
   const appointmentsStore = useAppointmentStore();
 
   const formatter = ref({
-    date: 'DD MM YYYY',
+    date: 'DD/MM/YYYY',
     month: 'MMM',
   })
 
