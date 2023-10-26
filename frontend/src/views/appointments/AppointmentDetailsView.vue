@@ -48,15 +48,16 @@ import { ref } from 'vue';
         />
       </div>
 
-      <div class="mt-5 md:mt-0 grid grid-cols-4 gap-3">
-        <article 
+      <div v-if="appointmentsStore.isDateSelected" class="mt-5 md:mt-0 grid grid-cols-4 gap-3">
+        <button 
           v-for="hour in appointmentsStore.hours" 
-          class="cursor-pointer p-1 rounded-xl bg-gray-600 w-20 md:w-28 hover:bg-gray-800"
+          class="cursor-pointer p-1 rounded-xl bg-gray-600 w-20 md:w-28 hover:bg-gray-800 disabled:opacity-20 disabled:cursor-default"
           :class="appointmentsStore.selectedHour === hour ? 'border border-blue-500' : '' "
           @click="appointmentsStore.onSelectedHour(hour)"
+          :disabled="appointmentsStore.disableHour(hour) ? true : false"
         >
           <p class="text-center text-white font-bold text-base">{{ hour }}</p>
-        </article>
+        </button>
       </div>
     </div>
 

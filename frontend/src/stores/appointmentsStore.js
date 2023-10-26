@@ -1,4 +1,4 @@
-import { ref, computed, onMounted, inject } from 'vue';
+import { ref, computed, onMounted, inject, watch } from 'vue';
 import {useRouter} from 'vue-router'
 import {defineStore} from 'pinia';
 import appointmentServices from '../api/appointmentServices';
@@ -12,6 +12,7 @@ export const useAppointmentStore = defineStore('appointments', () => {
     const dateValue = ref('');
     const hours = ref([]);
     const selectedHour = ref('');
+    const appointmentsByDate = ref([]);
 
     onMounted(() => {  //Available hours to select
         const startHour = 10;
@@ -20,6 +21,18 @@ export const useAppointmentStore = defineStore('appointments', () => {
         for(let hour = startHour; hour <= finishHour; hour++){
             hours.value.push(hour + ':00');  //10:00, 11:00, 12:00 . . . 
         }
+    })
+
+    watch(dateValue, async () => {
+        selectedHour.value = '';
+
+        if(dateValue.value === ''){ //This is because one time you confirm an appointment, date value is reseted (in createAppointment below) and watch is runned again with no value;
+            return;
+        }
+
+        const {data} = await appointmentServices.getAppointmentsByDate(dateValue.value);
+        //console.log(data);
+        appointmentsByDate.value = data;
     })
 
     function onServiceSelected(service){
@@ -77,9 +90,19 @@ export const useAppointmentStore = defineStore('appointments', () => {
     const onSelectedHour = (hour) => {
         selectedHour.value = hour;
     }
-
+    
     const isValidConfirmation = computed(() => {
         return services.value.length && dateValue.value.length && selectedHour.value.length;
+    })
+    
+    const isDateSelected = computed(() => {
+        return dateValue.value ? true : false;
+    })
+    
+    const disableHour = computed(() => {
+        return (hour) => {
+            return appointmentsByDate.value.find(appointment => appointment.selectedHour === hour);
+        }
     })
 
     return{
@@ -92,6 +115,8 @@ export const useAppointmentStore = defineStore('appointments', () => {
         createAppointment,
         isServiceSelected,
         totalToPay,
-        isValidConfirmation
+        isValidConfirmation,
+        isDateSelected,
+        disableHour
     }
 })

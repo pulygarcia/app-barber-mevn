@@ -9,5 +9,14 @@ export default{
                 Authorization: `Bearer ${token}`
             }
         })
+    },
+    getAppointmentsByDate(date){
+        const token = localStorage.getItem('auth_jwt');
+
+        return api.get(`/appointments?date=${date}`, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
     }
 }
