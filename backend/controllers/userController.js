@@ -17,7 +17,7 @@ const getUserAppointments = async (req, res) => {
             date:{
                 $gte: new Date()  //=> only give me appointments that are >= than today
             }
-        }).populate('services') //we are getting only the ID from services, .populate, give us all the info of the services
+        }).populate('services').sort({date: 'asc'}) //we are getting only the ID from services, .populate, give us all the info of the services
 
         res.json(appointments)
     } catch (error) {

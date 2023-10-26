@@ -18,5 +18,14 @@ export default{
                 Authorization: `Bearer ${token}`
             }
         })
+    },
+    getUserAppointments(user){
+        const token = localStorage.getItem('auth_jwt');
+
+        return api.get(`/users/${user}/appointments`, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
     }
 }
