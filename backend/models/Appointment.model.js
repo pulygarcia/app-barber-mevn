@@ -10,10 +10,10 @@ const appointmentSchema = mongoose.Schema({
     date: {
         type: Date
     },
-    time: {
+    selectedHour: {
         type: String
     },
-    total: {
+    totalToPay: {
         type: Number
     },
     user: {
