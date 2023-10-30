@@ -1,10 +1,11 @@
 import Appointment from '../models/Appointment.model.js'
 import {parse, formatISO, startOfDay, endOfDay, isValid} from 'date-fns';
+import { validateId, serviceNotFound } from '../helpers/index.js';
 
 const createAppointment = async (req, res) => {
     const appointment = req.body;
     appointment.user = req.user._id.toString();   //user is returned from middleware in the req, so you can get it by there
-    console.log(appointment);
+    //console.log(appointment);
 
     try {
         const newAppointment = new Appointment(appointment);
@@ -54,7 +55,26 @@ const getAppointmentByDate = async (req, res) => {
     }
 }
 
+const getAppointmentById = async (req, res) => {
+    //console.log(req.params.id);
+    const id = req.params.id;
+    if(validateId(id, res)){
+        return;
+    }
+
+    const appointment = await Appointment.findById(id);
+    if(!appointment){
+        return res.status(403).json({
+            msg: 'El turno no existe'
+        })
+    }
+
+
+    res.json(appointment);
+}
+
 export{
     createAppointment,
-    getAppointmentByDate
+    getAppointmentByDate,
+    getAppointmentById
 }
