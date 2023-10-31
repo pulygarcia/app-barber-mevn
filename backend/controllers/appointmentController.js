@@ -69,6 +69,12 @@ const getAppointmentById = async (req, res) => {
         })
     }
 
+    if(appointment.user.toString() !== req.user.id.toString()){  //If the user that want to get the appointment is not the user that created the appointment
+        const error = new Error('No tienes permiso para obtener la cita');
+        res.status(403).json({
+            msg: error.message
+        })
+    }
 
     res.json(appointment);
 }
