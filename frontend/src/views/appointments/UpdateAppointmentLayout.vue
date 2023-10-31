@@ -2,17 +2,20 @@
     import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router';
     import {onMounted} from 'vue'
     import appointmentServices from '../../api/appointmentServices';
+    import {useAppointmentStore} from '../../stores/appointmentsStore';
 
     const route = useRoute();
     const router = useRouter();
+    const appointmentsStore = useAppointmentStore();
 
     const id = route.params.id;
 
     onMounted(async () => {
         try {
-          const {data: appointment} = await appointmentServices.getAppointmentById(id);
+          const { data: appointment } = await appointmentServices.getAppointmentById(id);
           //console.log(appointment); 
-          
+          appointmentsStore.setAppointmentForUpdate(appointment);
+
         } catch (error) {
           console.log(error);
           router.push({name: 'user-appointments'});

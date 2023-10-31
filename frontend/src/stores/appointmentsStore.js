@@ -2,12 +2,13 @@ import { ref, computed, onMounted, inject, watch } from 'vue';
 import {useRouter} from 'vue-router'
 import {defineStore} from 'pinia';
 import appointmentServices from '../api/appointmentServices';
-import {convertToIso} from '../helpers/date'
+import {convertToIso, isoToDDMMYYYY} from '../helpers/date'
 
 export const useAppointmentStore = defineStore('appointments', () => {
     const toast = inject('toast');
     const router = useRouter();
 
+    const appointmentId = ref('');
     const services = ref([]);
     const dateValue = ref('');
     const hours = ref([]);
@@ -32,8 +33,30 @@ export const useAppointmentStore = defineStore('appointments', () => {
 
         const {data} = await appointmentServices.getAppointmentsByDate(dateValue.value);
         //console.log(data);
-        appointmentsByDate.value = data;
+
+        if(appointmentId.value){
+            //console.log('updating appointment');
+            //this below is for the system dont block the current hour of selected appointment for update
+            appointmentsByDate.value = data.filter(appointment => appointment._id !== appointmentId.value);
+
+            //Show as selected the hour that was already selected before
+            const currentAppointment = data.filter(appointment => appointment._id === appointmentId.value)[0];
+            selectedHour.value = currentAppointment.selectedHour;
+
+        }else{
+            //console.log('new appointment');
+            appointmentsByDate.value = data;
+        }
     })
+
+
+    function setAppointmentForUpdate(appointment){
+        //Show appointment data modifying the state
+        services.value = appointment.services; //this points appointment selected services in view.
+        dateValue.value = isoToDDMMYYYY(appointment.date);
+        selectedHour.value = appointment.selectedHour;
+        appointmentId.value = appointment._id;
+    }
 
     function onServiceSelected(service){
         //Avoid duplicates
@@ -110,6 +133,7 @@ export const useAppointmentStore = defineStore('appointments', () => {
         dateValue,
         hours,
         selectedHour,
+        setAppointmentForUpdate,
         onSelectedHour,
         onServiceSelected,
         createAppointment,

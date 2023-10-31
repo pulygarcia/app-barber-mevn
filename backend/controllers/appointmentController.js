@@ -62,7 +62,7 @@ const getAppointmentById = async (req, res) => {
         return;
     }
 
-    const appointment = await Appointment.findById(id);
+    const appointment = await Appointment.findById(id).populate('services'); //services in this object only have service id, populate return all service object
     if(!appointment){
         return res.status(403).json({
             msg: 'El turno no existe'

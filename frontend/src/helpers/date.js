@@ -11,9 +11,16 @@ export function convertToIso(strDate){
 
 export function isoToString(isoDate){
     const newDate = parseISO(isoDate);
-    const formattedDate = format(newDate, 'PPPP', {
+    const formattedDate = format(newDate, 'PPPP', { //pppp = EXAMPLE: 31 de octubre de 2023
         locale: es
     })
+
+    return formattedDate
+}
+
+export function isoToDDMMYYYY(isoDate){
+    const date = new Date(isoDate);
+    const formattedDate = format(date, 'dd/MM/yyyy');
 
     return formattedDate
 }
