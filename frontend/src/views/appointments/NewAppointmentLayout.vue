@@ -1,7 +1,14 @@
 <script setup>
 import { RouterLink, RouterView, useRoute } from 'vue-router';
+import { onMounted } from 'vue';
+import { useAppointmentStore } from '../../stores/appointmentsStore';
 
 const route = useRoute();
+const appointmentsStore = useAppointmentStore();
+
+onMounted(() => {
+  appointmentsStore.clearAppointment();
+})
 </script>
 
 <template>
@@ -25,7 +32,3 @@ const route = useRoute();
 
   <RouterView />
 </template>
-
-<style scoped>
-
-</style>

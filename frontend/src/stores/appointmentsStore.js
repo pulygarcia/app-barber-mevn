@@ -109,14 +109,18 @@ export const useAppointmentStore = defineStore('appointments', () => {
             }
         }
 
-        services.value = [];
-        dateValue.value = '';
-        selectedHour.value = '';
-        appointmentId.value = '';
+        clearAppointment();
 
         userStore.getUserAppointments(); //avoid have to reload page for can see the changes
 
         router.push({name: 'user-appointments'});
+    }
+
+    const clearAppointment = () => {
+        services.value = [];
+        dateValue.value = '';
+        selectedHour.value = '';
+        appointmentId.value = '';
     }
 
     const isServiceSelected = computed(() => {
@@ -159,6 +163,7 @@ export const useAppointmentStore = defineStore('appointments', () => {
         totalToPay,
         isValidConfirmation,
         isDateSelected,
-        disableHour
+        disableHour,
+        clearAppointment
     }
 })
