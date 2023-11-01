@@ -3,10 +3,12 @@ import {useRouter} from 'vue-router'
 import {defineStore} from 'pinia';
 import appointmentServices from '../api/appointmentServices';
 import {convertToIso, isoToDDMMYYYY} from '../helpers/date'
+import {useUserStore} from '../stores/userStore'
 
 export const useAppointmentStore = defineStore('appointments', () => {
     const toast = inject('toast');
     const router = useRouter();
+    const userStore = useUserStore();
 
     const appointmentId = ref('');
     const services = ref([]);
@@ -52,7 +54,7 @@ export const useAppointmentStore = defineStore('appointments', () => {
 
     function setAppointmentForUpdate(appointment){
         //Show appointment data modifying the state
-        services.value = appointment.services; //this points appointment selected services in view.
+        services.value = appointment.services;
         dateValue.value = isoToDDMMYYYY(appointment.date);
         selectedHour.value = appointment.selectedHour;
         appointmentId.value = appointment._id;
@@ -72,33 +74,49 @@ export const useAppointmentStore = defineStore('appointments', () => {
         }
     }
 
-    async function createAppointment(){
+    async function saveAppointment(){ //This function work for create, or update an appointment
         const appointment = {
             services: services.value.map(service => service._id),  //Only need service ID, not all the object
             date: convertToIso(dateValue.value),
             totalToPay: totalToPay.value,
             selectedHour: selectedHour.value
         }
-        //console.log(appointment);
         
-        try {
-            const {data} = await appointmentServices.createAppointment(appointment);
-            //console.log(data.msg);
-            toast.open({
-                message: data.msg,
-                type: 'success'
-            })
+        if(appointmentId.value){ //If is updating...
+            try {
+                const {data} = await appointmentServices.updateAppointment(appointmentId.value ,appointment);
 
-            //reset
-            services.value = [];
-            dateValue.value = '';
-            selectedHour.value = '';
+                toast.open({
+                    message: data.msg,
+                    type: 'success'
+                })
 
-            router.push({name: 'user-appointments'});
+            } catch (error) {
+                console.log(error);
+            }
 
-        } catch (error) {
-            console.log(error);
+        }else{ //if is creating new...
+            try {
+                const {data} = await appointmentServices.createAppointment(appointment);
+                //console.log(data.msg);
+                toast.open({
+                    message: data.msg,
+                    type: 'success'
+                })
+    
+            } catch (error) {
+                console.log(error);
+            }
         }
+
+        services.value = [];
+        dateValue.value = '';
+        selectedHour.value = '';
+        appointmentId.value = '';
+
+        userStore.getUserAppointments(); //avoid have to reload page for can see the changes
+
+        router.push({name: 'user-appointments'});
     }
 
     const isServiceSelected = computed(() => {
@@ -136,7 +154,7 @@ export const useAppointmentStore = defineStore('appointments', () => {
         setAppointmentForUpdate,
         onSelectedHour,
         onServiceSelected,
-        createAppointment,
+        saveAppointment,
         isServiceSelected,
         totalToPay,
         isValidConfirmation,

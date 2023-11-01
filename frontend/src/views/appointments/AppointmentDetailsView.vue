@@ -65,7 +65,7 @@ import { ref } from 'vue';
       <button 
         type="button" 
         class="bg-blue-500 text-white font-bold w-full p-3 rounded-lg"
-        @click="appointmentsStore.createAppointment"
+        @click="appointmentsStore.saveAppointment"
       >
         Confirmar turno
       </button>

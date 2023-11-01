@@ -79,8 +79,51 @@ const getAppointmentById = async (req, res) => {
     res.json(appointment);
 }
 
+const updateAppointment = async (req, res) => {
+    //console.log('Updating');
+    const id = req.params.id;
+
+    if(validateId(id, res)){
+        return;
+    }
+
+    const appointment = await Appointment.findById(id); //services in this object only have service id, populate return all service object
+    if(!appointment){
+        return res.status(403).json({
+            msg: 'No es posible editar el turno'
+        })
+    }
+
+    if(appointment.user.toString() !== req.user.id.toString()){  //If the user that want to get the appointment is not the user that created the appointment
+        const error = new Error('No tienes permiso para editar el turno');
+        res.status(403).json({
+            msg: error.message
+        })
+    }
+
+    //make changes
+    appointment.date = req.body.date;
+    appointment.selectedHour = req.body.selectedHour;
+    appointment.services = req.body.services;
+    appointment.totalToPay = req.body.totalToPay;
+
+    try {
+        const updatedAppointment = await appointment.save();
+        res.json({
+            msg: 'El turno se editó correctamente'
+        })
+
+    } catch {
+        const error = new Error('El turno no se pudo editar');
+        res.status(403).json({
+            msg: error.message
+        })
+    }
+}
+
 export{
     createAppointment,
     getAppointmentByDate,
-    getAppointmentById
+    getAppointmentById,
+    updateAppointment
 }

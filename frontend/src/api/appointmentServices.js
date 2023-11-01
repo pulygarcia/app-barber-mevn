@@ -36,5 +36,14 @@ export default{
                 Authorization: `Bearer ${token}`
             }
         })
+    },
+    updateAppointment(id, data){
+        const token = localStorage.getItem('auth_jwt');
+
+        return api.put(`/appointments/${id}`, data, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
     }
 }
