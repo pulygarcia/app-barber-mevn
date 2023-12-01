@@ -124,19 +124,24 @@ export const useAppointmentStore = defineStore('appointments', () => {
     }
 
     const cancelAppointment = async (appointment) => {
-        try {
-            await appointmentServices.cancelAppointment(appointment);
-
-            toast.open({
-                message: 'Turno cancelado correctamente',
-                type: 'success'
-            })
-
-        } catch (error) {
-            console.log(error);
+        if(confirm('¿Desea cancelar el turno?')){
+            try {
+                const {data} = await appointmentServices.cancelAppointment(appointment);
+    
+                toast.open({
+                    message: data.msg,
+                    type: 'success'
+                })
+    
+            } catch (error) {
+                console.log(error);
+                toast.open({
+                    message: error.response.data.msg,
+                    type: 'error'
+                })
+            }
+            userStore.getUserAppointments();
         }
-
-        userStore.getUserAppointments();
     }
 
     const isServiceSelected = computed(() => {
