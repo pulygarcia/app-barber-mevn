@@ -123,6 +123,22 @@ export const useAppointmentStore = defineStore('appointments', () => {
         appointmentId.value = '';
     }
 
+    const cancelAppointment = async (appointment) => {
+        try {
+            await appointmentServices.cancelAppointment(appointment);
+
+            toast.open({
+                message: 'Turno cancelado correctamente',
+                type: 'success'
+            })
+
+        } catch (error) {
+            console.log(error);
+        }
+
+        userStore.getUserAppointments();
+    }
+
     const isServiceSelected = computed(() => {
         //Use for add dinamic classes in the component
         return (id) => services.value.some(selectedService => selectedService._id === id)
@@ -156,6 +172,7 @@ export const useAppointmentStore = defineStore('appointments', () => {
         hours,
         selectedHour,
         setAppointmentForUpdate,
+        cancelAppointment,
         onSelectedHour,
         onServiceSelected,
         saveAppointment,

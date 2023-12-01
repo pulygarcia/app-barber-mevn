@@ -3,8 +3,10 @@
     import {isoToString} from '../helpers/date'
     import {formatCurrency} from '../helpers/index'
     import {useUserStore} from '../stores/userStore'
+    import {useAppointmentStore} from '../stores/appointmentsStore'
 
     const userStore = useUserStore();
+    const appointmentsStore = useAppointmentStore();
 
     defineProps({
         appointment:{
@@ -25,7 +27,7 @@
 
     <div class="flex gap-3 mt-4">
       <RouterLink :to="{name: 'update-appointment', params:{id: appointment._id}}" class="bg-blue-500 rounded-lg text-white font-bold py-2 px-5 hover:bg-blue-700 transition">Editar turno</RouterLink>
-      <button @click="userStore.cancelAppointment(appointment)" type="button" class="bg-red-500 rounded-lg text-white font-bold py-2 px-5 hover:bg-red-700 transition border-none">Cancelar</button>
+      <button @click="appointmentsStore.cancelAppointment(appointment._id)" type="button" class="bg-red-500 rounded-lg text-white font-bold py-2 px-5 hover:bg-red-700 transition border-none">Cancelar</button>
     </div>
   </article>
 </template>

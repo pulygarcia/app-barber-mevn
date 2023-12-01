@@ -121,9 +121,45 @@ const updateAppointment = async (req, res) => {
     }
 }
 
+const cancelAppointment = async (req, res) => {
+    const id = req.params.id;
+
+    if(validateId(id, res)){
+        return;
+    }
+
+    const appointment = await Appointment.findById(id);
+    if(!appointment){
+        return res.status(403).json({
+            msg: 'No es posible cancelar el turno'
+        })
+    }
+
+    if(appointment.user.toString() !== req.user.id.toString()){
+        const error = new Error('No tienes permiso para cancelar el turno');
+        res.status(403).json({
+            msg: error.message
+        })
+    }
+
+    try {
+        await appointment.deleteOne()
+        res.json({
+            msg: 'El turno se canceló correctamente'
+        })
+
+    } catch {
+        const error = new Error('El turno no se pudo cancelar');
+        res.status(403).json({
+            msg: error.message
+        })
+    }
+}
+
 export{
     createAppointment,
     getAppointmentByDate,
     getAppointmentById,
-    updateAppointment
+    updateAppointment,
+    cancelAppointment
 }

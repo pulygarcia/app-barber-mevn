@@ -45,5 +45,14 @@ export default{
                 Authorization: `Bearer ${token}`
             }
         })
+    },
+    cancelAppointment(id){
+        const token = localStorage.getItem('auth_jwt');
+
+        return api.delete(`/appointments/${id}`, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
     }
 }
