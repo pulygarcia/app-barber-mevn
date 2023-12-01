@@ -1,6 +1,8 @@
 import Appointment from '../models/Appointment.model.js'
-import {parse, formatISO, startOfDay, endOfDay, isValid} from 'date-fns';
+import {parse, formatISO, startOfDay, endOfDay, isValid, format} from 'date-fns';
+import es from 'date-fns/locale/es/index.js';
 import { validateId, serviceNotFound } from '../helpers/index.js';
+import {sendNewAppointmentEmail} from '../email/appointmentsEmailServices.js'
 
 const createAppointment = async (req, res) => {
     const appointment = req.body;
@@ -9,7 +11,12 @@ const createAppointment = async (req, res) => {
 
     try {
         const newAppointment = new Appointment(appointment);
-        newAppointment.save();
+        const result = await newAppointment.save();
+
+        await sendNewAppointmentEmail({
+            date: format(result.date, 'PPPP', {locale: es}),
+            selectedHour: result.selectedHour
+        });
 
         res.json({
             msg: 'Tu turno fué guardado'
