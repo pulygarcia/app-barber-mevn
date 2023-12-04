@@ -2,7 +2,7 @@ import Appointment from '../models/Appointment.model.js'
 import {parse, formatISO, startOfDay, endOfDay, isValid, format} from 'date-fns';
 import es from 'date-fns/locale/es/index.js';
 import { validateId, serviceNotFound } from '../helpers/index.js';
-import {sendNewAppointmentEmail} from '../email/appointmentsEmailServices.js'
+import {sendNewAppointmentEmail, sendUpdatedAppointmentEmail, sendCanceledAppointmentEmail} from '../email/appointmentsEmailServices.js'
 
 const createAppointment = async (req, res) => {
     const appointment = req.body;
@@ -116,6 +116,12 @@ const updateAppointment = async (req, res) => {
 
     try {
         const updatedAppointment = await appointment.save();
+
+        await sendUpdatedAppointmentEmail({
+            date: format(updatedAppointment.date, 'PPPP', {locale: es}),
+            selectedHour: updatedAppointment.selectedHour
+        })
+
         res.json({
             msg: 'El turno se editó correctamente'
         })
@@ -151,6 +157,12 @@ const cancelAppointment = async (req, res) => {
 
     try {
         await appointment.deleteOne()
+
+        await sendCanceledAppointmentEmail({
+            date:  format(appointment.date, 'PPPP', {locale: es}),
+            selectedHour: appointment.selectedHour
+        })
+
         res.json({
             msg: 'El turno se canceló correctamente'
         })

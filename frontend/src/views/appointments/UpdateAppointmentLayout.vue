@@ -34,7 +34,7 @@
     </RouterLink>
 
     <RouterLink
-      :to="{name: 'appointment-details'}"
+      :to="{name: 'update-appointment-details'}"
       class="flex-1 text-center py-2 font-bold uppercase hover:bg-blue-500 hover:text-white"
       :class="route.name == 'appointment-details' ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'"
     >
