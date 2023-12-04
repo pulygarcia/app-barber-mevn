@@ -62,5 +62,6 @@
     <FormKit type="submit">Ingresar</FormKit>
   </FormKit>
 
+  <p class="mt-5 text-white">¿Olvidaste tu contraseña? <span class="font-bold text-blue-500"><RouterLink :to="{name: 'forgot-password'}">Click aquí</RouterLink></span></p>
   <p class="mt-5 text-white">¿Todavía no tenés una cuenta? <span class="font-bold text-blue-500"><RouterLink :to="{name: 'register'}">Creá una cuenta aquí</RouterLink></span></p>
 </template>
