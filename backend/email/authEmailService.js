@@ -17,3 +17,20 @@ export async function sendVerificationEmail({name, email, token}){
         `
     });
 }
+
+export async function sendForgotPasswordEmail({name, email, token}){
+    //Create transporter
+    const transporter = createTransport(process.env.MAILTRAP_HOST, process.env.MAILTRAP_PORT, process.env.MAILTRAP_USER, process.env.MAILTRAP_PASS);
+
+    //Send email
+    await transporter.sendMail({
+        from: "infinity@gmail.com",
+        to: email,
+        subject: "Reestablecer contraseña",
+        text: "App infinity, reestablecer contraseña",
+        html: `<p>Hola ${name}. Has solicitado reestablecer tu contraseña de Infinity.</p>
+            <p>Por favor confirmá tu cuenta para validar que sos vos, con un click en el siguiente enlace: </p>
+            <a href="${process.env.FRONTEND_URL}/auth/nuevo-password/${token}">Reestablecer contraseña</a>
+        `
+    });
+} 

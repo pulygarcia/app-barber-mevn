@@ -17,5 +17,8 @@ export default{
                 Authorization: `Bearer ${token}`  //Check why is 'Bearer' here, in back middleware.
             }
         });
+    },
+    forgotPassword(data){
+        return api.post('/auth/forgot-password', data);
     }
 }

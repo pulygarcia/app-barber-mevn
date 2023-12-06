@@ -1,6 +1,6 @@
-import { sendVerificationEmail } from '../email/authEmailService.js';
+import { sendVerificationEmail, sendForgotPasswordEmail } from '../email/authEmailService.js';
 import User from '../models/User.model.js'
-import { generateJWT } from '../helpers/index.js';
+import { generateJWT, userToken } from '../helpers/index.js';
 
 const register = async (req, res) => {
     //Valid the fields
@@ -124,6 +124,38 @@ const login = async (req, res) => {
     }
 }
 
+const forgotPassword = async (req, res) => {
+    //Check if user exists in DB
+    const user = await User.findOne({email: req.body.email});
+    if(!user){
+        const error = new Error('El usuario no existe');
+
+        return res.status(404).json({
+            msg : error.message
+        })
+    }
+
+    //Generate token to user
+    try {
+        user.token = userToken();
+
+        const result = await user.save();
+        
+        await sendForgotPasswordEmail({
+            name: result.name,
+            email: result.email,
+            token: result.token
+        });
+
+        res.json({
+            msg: 'Hemos enviado un email con las instrucciones'
+        })
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const user = async (req, res) => {
     //console.log(req.user);   //Getting req.user from middleware and returning it
     res.json(
@@ -135,5 +167,6 @@ export{
     register,
     verifyUser,
     login,
+    forgotPassword,
     user
 }

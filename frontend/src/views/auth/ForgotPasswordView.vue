@@ -1,5 +1,28 @@
 <script setup>
+  import authApiServices from '../../api/authApiServices'
+  import { inject } from 'vue';
+  import { reset } from '@formkit/core'
 
+  const toast = inject('toast');
+
+  const handleSubmit = async (formData) => {
+    try {
+      const {data} = await authApiServices.forgotPassword({email: formData.email});
+
+      toast.open({
+        message: data.msg,
+        type: 'success'
+      });
+
+    } catch (error){
+      toast.open({
+        message: error.response.data.msg,
+        type: 'error'
+      });
+    }finally{
+      reset('forgotPasswordFormkit')
+    }
+  }
 </script>
 
 <template>
@@ -7,7 +30,7 @@
   <p class="text-white text-center">Recuperá tu contraseña</p>
 
   <FormKit
-    id="registerFormkit"
+    id="forgotPasswordFormkit"
     type="form"
     :actions="false"
     incomplete-message="No completaste el formulario"
