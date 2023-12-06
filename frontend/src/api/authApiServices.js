@@ -18,7 +18,14 @@ export default{
             }
         });
     },
+    //Forgot password endpoints
     forgotPassword(data){
         return api.post('/auth/forgot-password', data);
+    },
+    verifyResetPasswordToken(token){
+        return api.get(`/auth/forgot-password/${token}`);
+    },
+    updatePassword(newPassword){
+        return api.post(`/auth/forgot-password`, newPassword);
     }
 }

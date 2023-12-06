@@ -156,6 +156,27 @@ const forgotPassword = async (req, res) => {
     }
 }
 
+const verifyResetPasswordToken = async (req, res) => {
+    //console.log('Verify token');
+    const isValidToken = await User.findOne({token: req.params.token});
+    //If NO valid token
+    if(!isValidToken){
+        const error = new Error('Error, Token no válido');
+
+        return res.status(401).json({
+            msg : error.message
+        })
+    }
+
+    res.json({
+        msg: 'Token válido'
+    })
+}
+
+const updatePassword = async (req, res) => {
+    console.log('updating password');
+}
+
 const user = async (req, res) => {
     //console.log(req.user);   //Getting req.user from middleware and returning it
     res.json(
@@ -168,5 +189,7 @@ export{
     verifyUser,
     login,
     forgotPassword,
+    verifyResetPasswordToken,
+    updatePassword,
     user
 }
