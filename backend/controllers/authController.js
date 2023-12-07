@@ -174,7 +174,32 @@ const verifyResetPasswordToken = async (req, res) => {
 }
 
 const updatePassword = async (req, res) => {
-    console.log('updating password');
+    const user = await User.findOne({token: req.params.token});
+    //If NO valid token
+    if(!user){
+        const error = new Error('Error, Token no válido');
+
+        return res.status(401).json({
+            msg : error.message
+        })
+    }
+
+    try {
+        user.token = ''; //remove the token that is give when user forgot password
+        user.password = req.body.password;
+        await user.save();
+
+        return res.json({
+            msg : "La contraseña fué cambiada"
+        });
+
+    } catch {
+        const error = new Error('Error, no se pudo modificar la contraseña');
+
+        return res.status(401).json({
+            msg : error.message
+        })
+    }
 }
 
 const user = async (req, res) => {
