@@ -12,6 +12,12 @@ const router = createRouter({
       component: HomeView
     },
     {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/adminPanel/AdminLayout.vue'),
+      meta: { onlyAdmin: true },
+    },
+    {
       path: '/reservaciones',
       name: 'appointments',
       component: AppointmentsLayout,
@@ -86,21 +92,17 @@ const router = createRouter({
           name : 'new-password',
           component : () => import('../views/auth/NewPasswordView.vue')
         },
-        {
-          path : '/admin',
-          name : 'admin-panel',
-          component : () => import('../views/adminPanel/AdminLayout.vue')
-        },
       ]
     }
   ]
 })
 
-//Guard navigation (info from vue-router docs)
+//Guard navigation for auth (info from vue-router docs)
 
 router.beforeEach(async (to, from, next) => {
   //check routes that need auth
   const requiresAuth = to.matched.some(url => url.meta.requiresAuth); //.matched works for find childrens of the father route that need auth
+  const onlyAdmin = to.matched.some(url => url.meta.onlyAdmin);
 
   if(requiresAuth){
     //Check if user is auth
@@ -108,10 +110,31 @@ router.beforeEach(async (to, from, next) => {
       const {data} = await authApiServices.auth();
       
       if(data.admin){
-        next('/admin')
+        next({name: 'admin'})
       }else{
         next();
       }
+      
+    } catch (error) {
+      console.log(error.response.data.msg);
+      next({name: 'auth-login'})
+    }
+
+  }else{
+    next();
+  }
+})
+
+//GUARD FOR ADMIN
+router.beforeEach(async (to, from, next) => {
+  const onlyAdmin = to.matched.some(url => url.meta.onlyAdmin);
+
+  if(onlyAdmin){
+    //Check if user is auth
+    try {
+      await authApiServices.admin();
+      
+      next();//allow access
       
     } catch (error) {
       console.log(error.response.data.msg);
