@@ -86,6 +86,11 @@ const router = createRouter({
           name : 'new-password',
           component : () => import('../views/auth/NewPasswordView.vue')
         },
+        {
+          path : '/admin',
+          name : 'admin-panel',
+          component : () => import('../views/adminPanel/AdminLayout.vue')
+        },
       ]
     }
   ]
@@ -100,9 +105,13 @@ router.beforeEach(async (to, from, next) => {
   if(requiresAuth){
     //Check if user is auth
     try {
-      await authApiServices.auth();
-
-      next();
+      const {data} = await authApiServices.auth();
+      
+      if(data.admin){
+        next('/admin')
+      }else{
+        next();
+      }
       
     } catch (error) {
       console.log(error.response.data.msg);

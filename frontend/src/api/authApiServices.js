@@ -18,6 +18,14 @@ export default{
             }
         });
     },
+    admin(){
+        const token = localStorage.getItem('auth_jwt');
+        return api.get('/auth/admin', {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+    },
     //Forgot password endpoints
     forgotPassword(data){
         return api.post('/auth/forgot-password', data);
