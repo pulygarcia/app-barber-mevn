@@ -179,24 +179,24 @@ const updatePassword = async (req, res) => {
     if(!user){
         const error = new Error('Error, Token no válido');
 
-        return res.status(401).json({
+        return res.status(400).json({
             msg : error.message
         })
     }
 
     try {
-        user.token = ''; //remove the token that is give when user forgot password
+        user.token = ''; //remove the token that was given when user forgot password
         user.password = req.body.password;
         await user.save();
 
-        return res.json({
+        res.json({
             msg : "La contraseña fué cambiada"
         });
 
     } catch {
-        const error = new Error('Error, no se pudo modificar la contraseña');
+        const error = new Error('No se pudo modificar la contraseña');
 
-        return res.status(401).json({
+        return res.status(400).json({
             msg : error.message
         })
     }
