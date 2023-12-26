@@ -12,12 +12,10 @@ const getUserAppointments = async (req, res) => {
     }
 
     try {
-        const appointments = await Appointment.find({
-            user: req.params.user,
-            date:{
-                $gte: new Date()  //=> only give me appointments that are >= than today
-            }
-        }).populate('services').sort({date: 'asc'}) //we are getting only the ID from services, .populate, give us all the info of the services
+        //Get all the appointments depending if is admin or no
+        const query = req.user.admin ?  {date:{$gte: new Date()}} :  {user:req.params.user, date:{$gte: new Date()}}  // only give me appointments that are >= than today          
+
+        const appointments = await Appointment.find(query).populate('services').sort({date: 'asc'}) //we are getting only the ID from services, .populate, give us all the info of the services
 
         res.json(appointments)
     } catch (error) {
