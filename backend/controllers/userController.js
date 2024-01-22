@@ -15,9 +15,15 @@ const getUserAppointments = async (req, res) => {
         //Get all the appointments depending if is admin or no
         const query = req.user.admin ?  {date:{$gte: new Date()}} :  {user:req.params.user, date:{$gte: new Date()}}  // only give me appointments that are >= than today          
 
-        const appointments = await Appointment.find(query).populate('services').sort({date: 'asc'}) //we are getting only the ID from services, .populate, give us all the info of the services
+        const appointments = await Appointment
+                                    .find(query)
+                                    .populate('services')
+                                    .populate({path: 'user', select:'-password'})
+                                    .sort({date: 'asc'}) 
+                                    //.populate, give us all the info of the field, if you dont wanna show exactly all the info (pwd for ex.), use "select: -pwd"
 
         res.json(appointments)
+        
     } catch (error) {
         console.log(error);
     }
